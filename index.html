@@ -1,0 +1,110 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Preguntas del Colegio</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 10px; }
+        h1 { text-align: center; color: #333; }
+        .question { margin-bottom: 20px; }
+        .options button { display: block; margin: 5px 0; padding: 10px; border: none; border-radius: 5px; background: #007BFF; color: white; cursor: pointer; }
+        .options button:hover { background: #0056b3; }
+        .result { margin-top: 15px; padding: 10px; border-radius: 5px; background: #e2e2e2; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Trivia del Colegio</h1>
+
+        <div id="quiz"></div>
+
+        <div id="cipher" style="display:none;">
+            <h2>¡Felicidades! Has llegado al reto final</h2>
+            <p>Decifra el siguiente mensaje (ROT 5):</p>
+            <pre>Utidfw htwfy ytifdx qtfif qf xstwj, ujwts st utdfw ijyjws qjynjw qf uwtnajwf.</pre>
+            <p>El ROT es: <strong>5</strong></p>
+            <textarea id="decoded" placeholder="Escribe aquí tu mensaje descifrado"></textarea><br>
+            <button onclick="reveal()">Enviar</button>
+        </div>
+
+        <div id="final" style="display:none;">
+            <h2>Datos Personales</h2>
+            <p>Aquí irían todos tus datos personales...</p>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                text: "¿En qué año fue fundado el colegio?",
+                options: ["1960", "1957", "1980", "1945"],
+                correct: 1,
+                wrongMsg: "El colegio inicia labores en el año 1957, en un terreno donado por el señor Escolástico Rojas. No se tiene certeza del porqué del nombre, al parecer se adopta por el sector donde se encuentra ubicado, barrio Soledad Norte, o por acepción religiosa. Inicia labores con cuatro cursos de primaria y posteriormente se amplía a la primaria completa."
+            },
+            {
+                text: "¿Cuál es el color principal del uniforme del colegio?",
+                options: ["Azul", "Verde", "Rojo", "Blanco"],
+                correct: 0
+            },
+            {
+                text: "¿Cuál es la mejor materia?",
+                options: ["Matemáticas", "Arte", "Educación Física", "Ciencias"],
+                correct: 0
+            },
+            {
+                text: "¿En qué ciudad está ubicado el colegio?",
+                options: ["Medellín", "Bogotá", "Cali", "Barranquilla"],
+                correct: 3
+            },
+            {
+                text: "¿Te gusta el colegio?",
+                options: ["Sí", "No"],
+                correct: 0
+            }
+        ];
+
+        let currentQuestion = 0;
+
+        function showQuestion() {
+            const q = questions[currentQuestion];
+            let html = `<div class='question'><h3>${q.text}</h3><div class='options'>`;
+            q.options.forEach((opt, i) => {
+                html += `<button onclick="answer(${i})">${opt}</button>`;
+            });
+            html += "</div><div id='msg'></div></div>";
+            document.getElementById("quiz").innerHTML = html;
+        }
+
+        function answer(i) {
+            const q = questions[currentQuestion];
+            const msgDiv = document.getElementById("msg");
+
+            if (i === q.correct) {
+                currentQuestion++;
+                if (currentQuestion < questions.length) {
+                    showQuestion();
+                } else {
+                    document.getElementById("quiz").style.display = "none";
+                    document.getElementById("cipher").style.display = "block";
+                }
+            } else {
+                msgDiv.innerHTML = `<div class='result'>${q.wrongMsg || "Respuesta incorrecta. Intenta de nuevo."}</div>`;
+            }
+        }
+
+        function reveal() {
+            const decoded = document.getElementById("decoded").value.trim();
+            if (decoded.toLowerCase() === "podrán cortar todas las flores, pero no podrán detener la primavera.".toLowerCase()) {
+                document.getElementById("cipher").style.display = "none";
+                document.getElementById("final").style.display = "block";
+            } else {
+                alert("Código incorrecto, inténtalo de nuevo.");
+            }
+        }
+
+        showQuestion();
+    </script>
+</body>
+</html>
